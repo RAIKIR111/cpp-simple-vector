@@ -11,11 +11,20 @@ public:
     }
  
     explicit ArrayPtr(Type* raw_ptr) noexcept : raw_ptr_(raw_ptr) {}
+
+    explicit ArrayPtr(ArrayPtr&& other) noexcept : raw_ptr_(std::move(other.Release())) {}
  
     ArrayPtr(const ArrayPtr&) = delete;
  
     ~ArrayPtr() {
         delete[] raw_ptr_;
+    }
+
+    ArrayPtr& operator=(ArrayPtr&& other) noexcept {
+        if (this != &other) {
+            raw_ptr_ = other.Release();
+        }
+        return *this;
     }
  
     ArrayPtr& operator=(const ArrayPtr&) = delete;
@@ -35,7 +44,7 @@ public:
     }
  
     explicit operator bool() const {
-        return (raw_ptr_) ? true : false;
+        return raw_ptr_;
     }
  
     Type* Get() const noexcept {
