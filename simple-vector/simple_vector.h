@@ -56,7 +56,7 @@ public:
         std::copy(other.begin(), other.end(), begin());
     }
 
-    SimpleVector(SimpleVector&& other) : items_(std::move(other.items_.Release())), size_(other.size_), capacity_(other.capacity_) {
+    SimpleVector(SimpleVector&& other) : items_(std::move(other.items_)), size_(other.size_), capacity_(other.capacity_) {
         other.size_ = 0;
         other.capacity_ = 0;
     }
@@ -120,7 +120,7 @@ public:
     // Если перед вставкой значения вектор был заполнен полностью,
     // вместимость вектора должна увеличиться вдвое, а для вектора вместимостью 0 стать равной 1
     Iterator Insert(ConstIterator pos, const Type& value) {
-        assert(pos - begin() <= end() - begin());
+        assert(pos >= begin() && pos <= end());
         // Напишите тело самостоятельно
         if (capacity_ == 0) capacity_ = 1;
         else if (capacity_ == size_) capacity_ *= 2;
@@ -179,9 +179,7 @@ public:
         // Напишите тело самостоятельно
         auto pos = const_cast<Type*>(poss);
 
-        assert(pos - begin() <= end() - begin());
-
-        if (size_ == 0) return nullptr;
+        assert(pos >= begin() && pos < end());
 
         size_t pos_copy = pos - begin();
         const size_t const_pos_copy = pos_copy;

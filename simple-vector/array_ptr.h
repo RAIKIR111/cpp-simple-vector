@@ -22,6 +22,7 @@ public:
 
     ArrayPtr& operator=(ArrayPtr&& other) noexcept {
         if (this != &other) {
+            delete[] raw_ptr_;
             raw_ptr_ = other.Release();
         }
         return *this;
